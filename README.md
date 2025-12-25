@@ -1,12 +1,11 @@
 # gallery-dl-server
 
-[![GitHub Release](https://img.shields.io/github/v/release/qx6ghqkz/gallery-dl-server?logo=github&style=for-the-badge)](https://github.com/qx6ghqkz/gallery-dl-server/releases/latest "Latest Release")
-[![PyPI - Version](https://img.shields.io/pypi/v/gallery-dl-server?logo=pypi&style=for-the-badge)](https://pypi.org/project/gallery-dl-server "PyPI")
-[![Docker Image Version](https://img.shields.io/docker/v/qx6ghqkz/gallery-dl-server?logo=docker&label=Docker&sort=semver&style=for-the-badge)](https://hub.docker.com/r/qx6ghqkz/gallery-dl-server "Docker")
-[![Docker Pulls](https://img.shields.io/docker/pulls/qx6ghqkz/gallery-dl-server.svg?logo=docker&style=for-the-badge)](https://hub.docker.com/r/qx6ghqkz/gallery-dl-server/tags "Docker Tags")
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/qx6ghqkz/gallery-dl-server/docker-image.yaml?branch=main&style=for-the-badge)](https://github.com/qx6ghqkz/gallery-dl-server/actions "GitHub Actions")
-[![Commits](https://img.shields.io/github/commit-activity/m/qx6ghqkz/gallery-dl-server?label=Commits&style=for-the-badge)](https://github.com/qx6ghqkz/gallery-dl-server/commits/main/ "Commit History")
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://raw.githubusercontent.com/qx6ghqkz/gallery-dl-server/master/LICENSE "License")
+[![GitHub Release](https://img.shields.io/github/v/release/mnk400/gallery-dl-server?logo=github&style=for-the-badge)](https://github.com/mnk400/gallery-dl-server/releases/latest "Latest Release")
+[![Docker Image Version](https://img.shields.io/docker/v/mxnik/gallery-dl-server?logo=docker&label=Docker&sort=semver&style=for-the-badge)](https://hub.docker.com/r/mxnik/gallery-dl-server "Docker")
+[![Docker Pulls](https://img.shields.io/docker/pulls/mxnik/gallery-dl-server.svg?logo=docker&style=for-the-badge)](https://hub.docker.com/r/mxnik/gallery-dl-server/tags "Docker Tags")
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/mnk400/gallery-dl-server/docker-image.yaml?branch=main&style=for-the-badge)](https://github.com/mnk400/gallery-dl-server/actions "GitHub Actions")
+[![Commits](https://img.shields.io/github/commit-activity/m/mnk400/gallery-dl-server?label=Commits&style=for-the-badge)](https://github.com/mnk400/gallery-dl-server/commits/main/ "Commit History")
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://raw.githubusercontent.com/mnk400/gallery-dl-server/main/LICENSE "License")
 
 ![screenshot](https://raw.githubusercontent.com/qx6ghqkz/gallery-dl-server/refs/heads/main/images/gallery-dl-server.png)
 
@@ -282,6 +281,18 @@ Navigate to `http://{{host}}:{{port}}/gallery-dl` and enter the requested `{{url
 
 ```shell
 curl -X POST --data-urlencode "url={{url}}" http://{{host}}:{{port}}/gallery-dl/q
+```
+
+For synchronous downloads that wait for completion and return success/failure status:
+
+```shell
+curl -X POST --data-urlencode "url={{url}}" "http://{{host}}:{{port}}/gallery-dl/q?mode=sync"
+```
+
+or 
+
+```shell
+curl -X POST --data-urlencode "url={{url}}" --data "mode=sync" "http://{{host}}:{{port}}/gallery-dl/q"
 ```
 
 ### Fetch

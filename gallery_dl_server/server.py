@@ -68,13 +68,13 @@ async def homepage(request: Request):
 
 
 async def submit_form(request: Request):
-    """Process form submission data and start download in the background."""
+    """Process form submission data and start download in the background or synchronously."""
     form_data = await request.form()
 
-    keys = ("url", "video-opts")
+    keys = ("url", "video-opts", "mode")
     values = tuple(form_data.get(key) for key in keys)
 
-    url, video_opts = (None if isinstance(value, UploadFile) else value for value in values)
+    url, video_opts, mode = (None if isinstance(value, UploadFile) else value for value in values)
 
     if not url:
         log.error("No URL provided.")
@@ -89,7 +89,14 @@ async def submit_form(request: Request):
     if not video_opts:
         video_opts = "none-selected"
 
+    # Check for sync mode via form data or query parameter
+    if not mode:
+        mode = request.query_params.get("mode", "async")
+
     request_options = {"video-options": video_opts}
+
+    if mode == "sync":
+        return await sync_download(url.strip(), request_options)
 
     task = BackgroundTask(download_task, url.strip(), request_options)
 
@@ -142,6 +149,59 @@ def download_task(url: str, request_options: dict[str, str]):
         log.info("Download process exited successfully")
     else:
         log.error("Download failed with exit code: %s", exit_code)
+
+
+async def sync_download(url: str, request_options: dict[str, str]):
+    """Run download synchronously and return detailed result."""
+    log.info("Starting synchronous download for URL: %s", url)
+    
+    log_queue: Queue[dict[str, Any]] = multiprocessing.Queue()
+    return_status: Queue[int] = multiprocessing.Queue()
+
+    args = (url, request_options, log_queue, return_status, custom_args)
+
+    process = multiprocessing.Process(target=download.run, args=args)
+    process.start()
+
+    logs = []
+    while process.is_alive() or not log_queue.empty():
+        try:
+            record_dict = log_queue.get(timeout=0.1)
+            record = output.dict_to_record(record_dict)
+            
+            if record.levelno >= output.LOG_LEVEL_MIN:
+                log.handle(record)
+            
+            logs.append(record.getMessage())
+            
+            if "Video should already be available" in record.getMessage():
+                log.warning("Terminating process as video is not available")
+                process.kill()
+        except queue.Empty:
+            continue
+
+    process.join()
+
+    try:
+        exit_code = return_status.get(block=False)
+    except queue.Empty:
+        exit_code = process.exitcode
+
+    success = exit_code == 0
+    
+    if success:
+        log.info("Synchronous download completed successfully")
+    else:
+        log.error("Synchronous download failed with exit code: %s", exit_code)
+
+    return JSONResponse({
+        "success": success,
+        "exit_code": exit_code,
+        "url": url,
+        "options": request_options,
+        "logs": logs[-10:] if logs else [],
+        "mode": "sync"
+    })
 
 
 async def log_route(request: Request):
