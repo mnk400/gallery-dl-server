@@ -178,6 +178,8 @@ async def sync_download(url: str, request_options: dict[str, str]):
                 log.warning("Terminating process as video is not available")
                 process.kill()
         except queue.Empty:
+            # Yield control back to event loop
+            await asyncio.sleep(0.01)
             continue
 
     process.join()
