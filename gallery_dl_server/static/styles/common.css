@@ -1,55 +1,92 @@
+/* Import base theme from manik.cc */
+@import url("https://manik.cc/style/export.css");
+
+/* Layout wrapper for index page */
+.wrapper {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-2xl);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    padding: var(--spacing-xl) var(--spacing-xl);
+  }
+}
+
+/* Header - shared between pages */
 header {
-  color: #d000ff;
-  background-color: #360342;
-  white-space: nowrap;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: var(--spacing-lg) var(--spacing-xl);
+  }
 }
 
 header a {
-  color: #dcdcdc;
-  font-size: 16px;
-  line-height: 1;
   text-decoration: none;
-  position: relative;
-  display: inline-block;
-  transition: color 0.2s ease, tranform 0.2s ease;
 }
 
-header a:hover {
-  color: #d000ff;
-  text-decoration: underline;
-  transform: translateY(-1px);
+.logo {
+  font-size: 14pt;
+  font-weight: 600;
+  color: var(--text-color);
 }
 
-#header-left a {
-  margin-right: 18px;
+.logo:hover {
+  color: var(--page-accent);
 }
 
-#header-right a {
-  padding-right: 0.15rem;
+.nav-links {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
 }
 
-#home {
-  color: #f0f0f0;
-  font-size: 32px;
-  font-family: "Kristi", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-#home:hover {
-  color:#d000ff;
+.nav-links a {
+  font-size: 11pt;
+  color: var(--sec-text-color);
   text-decoration: none;
-  transform: none;
+  transition: color var(--transition-medium);
 }
 
-.btn-custom {
-  color: white;
-  border-color: white;
-  background-color: transparent;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+.nav-links a:hover {
+  color: var(--page-accent);
 }
 
-.btn-custom:hover {
-  border-color: #9200b3;
-  background-color: #9200b3;
+/* Theme toggle button */
+#theme-toggle {
+  padding: var(--spacing-sm);
+  background: transparent;
+  color: var(--sec-text-color);
+  cursor: pointer;
+  display: flex;
+}
+
+#theme-toggle:hover {
+  color: var(--page-accent);
+  background: transparent;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#theme-toggle .theme-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

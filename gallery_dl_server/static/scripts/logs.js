@@ -1,3 +1,39 @@
+// ========== Theme Management ==========
+const themeToggle = document.getElementById("theme-toggle");
+const themeIconLight = document.getElementById("theme-icon-light");
+const themeIconDark = document.getElementById("theme-icon-dark");
+
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+
+  if (theme === "dark") {
+    themeIconLight.classList.add("hidden");
+    themeIconDark.classList.remove("hidden");
+  } else {
+    themeIconLight.classList.remove("hidden");
+    themeIconDark.classList.add("hidden");
+  }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    setTheme(savedTheme);
+  } else {
+    // Default to light theme
+    setTheme("light");
+  }
+}
+
+initTheme();
+
+themeToggle.onclick = () => {
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  setTheme(currentTheme === "dark" ? "light" : "dark");
+};
+
+// ========== Logs Management ==========
 const logsContainer = document.getElementById("container-logs");
 const clearLogsButton = document.getElementById("clear-logs");
 const refreshLogsButton = document.getElementById("refresh-logs");
@@ -20,11 +56,9 @@ clearLogsButton.onclick = async () => {
     console.log(data);
 
     logsContainer.textContent = "Cleared logs.";
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
-  }
-  finally {
+  } finally {
     clearLogsButton.disabled = false;
   }
 };
@@ -51,11 +85,9 @@ refreshLogsButton.onclick = async () => {
 
     logsContainer.textContent = logs.length ? logs : "No logs to display.";
     logsContainer.scrollTop = logsContainer.scrollHeight;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
-  }
-  finally {
+  } finally {
     refreshLogsButton.disabled = false;
   }
 };

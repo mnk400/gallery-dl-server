@@ -1,30 +1,39 @@
-const darkModeStyle = document.getElementById("dark-mode");
-const darkModeToggle = document.getElementById("dark-mode-toggle");
+// ========== Theme Management ==========
+const themeToggle = document.getElementById("theme-toggle");
+const themeIconLight = document.getElementById("theme-icon-light");
+const themeIconDark = document.getElementById("theme-icon-dark");
 
-function enableDarkMode() {
-  darkModeStyle.disabled = false;
-  darkModeToggle.innerHTML = `<i class="bi bi-sun-fill"></i>`;
-}
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
 
-function disableDarkMode() {
-  darkModeStyle.disabled = true;
-  darkModeToggle.innerHTML = `<i class="bi bi-moon-fill"></i>`;
-}
-
-if (localStorage.getItem("theme") === "dark") {
-  enableDarkMode();
-}
-
-darkModeToggle.onclick = () => {
-  if (darkModeStyle.disabled) {
-    enableDarkMode();
-    localStorage.setItem("theme", "dark");
+  if (theme === "dark") {
+    themeIconLight.classList.add("hidden");
+    themeIconDark.classList.remove("hidden");
   } else {
-    disableDarkMode();
-    localStorage.setItem("theme", "light");
+    themeIconLight.classList.remove("hidden");
+    themeIconDark.classList.add("hidden");
   }
+}
+
+function initTheme() {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    setTheme(savedTheme);
+  } else {
+    // Default to light theme
+    setTheme("light");
+  }
+}
+
+initTheme();
+
+themeToggle.onclick = () => {
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  setTheme(currentTheme === "dark" ? "light" : "dark");
 };
 
+// ========== Select Element Persistence ==========
 const selectElement = document.querySelector("select[name='video-opts']");
 
 function setSelectedValue() {
@@ -40,36 +49,17 @@ selectElement.onchange = () => {
   localStorage.setItem("selectedValue", selectElement.value);
 };
 
+// ========== Logs Box ==========
 const box = document.getElementById("box");
-const btn = document.getElementById("button-logs");
-
-function toggleLogs() {
-  if (btn.innerText == "Show Logs") {
-    btn.innerText = "Hide Logs";
-    box.classList.remove("d-none");
-    loadBox();
-    localStorage.setItem("logs", "shown");
-  }
-  else {
-    saveBox();
-    btn.innerText = "Show Logs";
-    box.classList.add("d-none");
-    localStorage.setItem("logs", "hidden");
-  }
-}
 
 function loadBox() {
-  if ("boxHeight" in sessionStorage && sessionStorage.getItem("boxHeight") != "0") {
+  if ("boxHeight" in sessionStorage && sessionStorage.getItem("boxHeight") !== "0") {
     box.style.height = sessionStorage.getItem("boxHeight") + "px";
-  }
-  else {
-    box.style.height = "";
   }
 
   if ("scrollPos" in sessionStorage) {
     box.scrollTop = sessionStorage.getItem("scrollPos");
-  }
-  else {
+  } else {
     box.scrollTop = box.scrollHeight;
   }
 }
@@ -80,11 +70,8 @@ function saveBox() {
   sessionStorage.setItem("scrollPos", box.scrollTop);
 }
 
-if (localStorage.getItem("logs") == "shown") {
-  toggleLogs();
-}
-
-btn.onclick = () => toggleLogs();
+// Load saved box state
+loadBox();
 
 function scrollOnResize() {
   let lastHeight = box.offsetHeight;
@@ -106,18 +93,25 @@ function scrollOnResize() {
 
 scrollOnResize();
 
-document.querySelector("body").classList.remove("d-none");
+// ========== Show Body ==========
+document.body.classList.remove("loading");
+document.body.classList.add("loaded");
 
+// ========== Form Submission ==========
 const form = document.getElementById("form");
+
+// Get the accent color from CSS variables for SweetAlert
+const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--page-accent').trim() || '#c6866d';
+
 const successAlert = Swal.mixin({
   animation: true,
   position: "top-end",
   icon: "success",
-  iconColor: "#550572",
-  color: "#550572",
+  iconColor: accentColor,
+  color: accentColor,
   showConfirmButton: false,
   confirmButtonText: "OK",
-  confirmButtonColor: "#550572",
+  confirmButtonColor: accentColor,
   showCloseButton: true,
   closeButtonHtml: "&times;",
   target: "body",
@@ -163,12 +157,12 @@ form.onsubmit = async (event) => {
           to the download queue.`
       });
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
 };
 
+// ========== WebSocket Connection ==========
 let ws;
 let isConnected = false;
 let isPageAlive = true;
@@ -190,7 +184,7 @@ async function fetchLogs() {
 
     const logs = await response.text();
 
-    if (box.textContent != logs) {
+    if (box.textContent !== logs) {
       box.textContent = logs;
       box.scrollTop = box.scrollHeight;
     }
@@ -198,8 +192,7 @@ async function fetchLogs() {
     if (!isConnected) {
       connectWebSocket();
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error.message);
   }
 }
@@ -240,8 +233,7 @@ function connectWebSocket(allowReconnect = true) {
       progressUpdate = true;
       lastPos = lastPos || lines.length - 1;
       lines[lastPos] = newLines[0];
-    }
-    else if (isLastLineProgress && !isNewLineProgress) {
+    } else if (isLastLineProgress && !isNewLineProgress) {
       lastPos = 0;
     }
 
@@ -278,10 +270,6 @@ fetchLogs();
 
 window.onbeforeunload = () => {
   isPageAlive = false;
-
   ws.close(1000, "User is leaving the page");
-
-  if (localStorage.getItem("logs") == "shown") {
-    saveBox();
-  }
+  saveBox();
 };

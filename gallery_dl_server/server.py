@@ -476,8 +476,8 @@ csp_policy = (
     "manifest-src 'self'; "
     "img-src 'self' data:; "
     "script-src 'self' https://cdn.jsdelivr.net; "
-    "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
-    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com;"
+    "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://manik.cc https://rsms.me; "
+    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://rsms.me;"
 )
 
 middleware = [
