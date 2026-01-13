@@ -26,11 +26,6 @@ from starlette.responses import RedirectResponse, JSONResponse, StreamingRespons
 from starlette.requests import Request
 from starlette.routing import Route, WebSocketRoute, Mount
 from starlette.staticfiles import StaticFiles
-from starlette.status import (
-    HTTP_200_OK,
-    HTTP_404_NOT_FOUND,
-    HTTP_500_INTERNAL_SERVER_ERROR,
-)
 from starlette.templating import Jinja2Templates
 from starlette.types import ASGIApp
 from starlette.websockets import WebSocket, WebSocketDisconnect, WebSocketState
@@ -235,47 +230,6 @@ async def log_route(request: Request):
     )
 
 
-async def clear_logs(request: Request):
-    """Clear the log file on request."""
-    try:
-        with open(log_file, "w") as file:
-            file.write("")
-
-        return JSONResponse(
-            {
-                "success": True,
-                "message": "Logs successfully cleared.",
-            },
-            status_code=HTTP_200_OK,
-        )
-    except FileNotFoundError:
-        return JSONResponse(
-            {
-                "success": False,
-                "error": "Log file not found.",
-            },
-            status_code=HTTP_404_NOT_FOUND,
-        )
-    except IOError:
-        return JSONResponse(
-            {
-                "success": False,
-                "error": "An error occurred while accessing the log file.",
-            },
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-        )
-    except Exception as e:
-        log.debug(f"Exception: {type(e).__name__}: {e}")
-
-        return JSONResponse(
-            {
-                "success": False,
-                "error": str(e),
-            },
-            status_code=HTTP_500_INTERNAL_SERVER_ERROR,
-        )
-
-
 async def log_stream(request: Request):
     """Stream the full contents of the log file."""
 
@@ -463,7 +417,6 @@ routes = [
     Route("/gallery-dl", endpoint=homepage, methods=["GET"]),
     Route("/gallery-dl/q", endpoint=submit_form, methods=["POST"]),
     Route("/gallery-dl/logs", endpoint=log_route, methods=["GET"]),
-    Route("/gallery-dl/logs/clear", endpoint=clear_logs, methods=["POST"]),
     Route("/stream/logs", endpoint=log_stream, methods=["GET"]),
     WebSocketRoute("/ws/logs", endpoint=log_update),
     Mount("/static", app=StaticFiles(directory=utils.resource_path("static")), name="static"),
@@ -477,7 +430,7 @@ csp_policy = (
     "img-src 'self' data:; "
     "script-src 'self' https://cdn.jsdelivr.net; "
     "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://manik.cc https://rsms.me; "
-    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://rsms.me;"
+    "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://rsms.me https://manik.cc;"
 )
 
 middleware = [

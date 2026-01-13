@@ -66,7 +66,7 @@
 }
 
 .logs-box {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: ui-monospace, 'IBM Plex Mono', monospace;
   font-size: 10pt;
   line-height: 1.6;
   background: var(--code-bg);

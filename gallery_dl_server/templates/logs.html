@@ -13,35 +13,10 @@
 
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" />
 </head>
 
 <body>
-  <header>
-    <a href="/gallery-dl" class="logo">gallery-dl</a>
-    <nav class="nav-links">
-      <button id="theme-toggle" title="Toggle theme">
-        <i id="theme-icon-light" class="fas theme-icon fa-sun" aria-hidden="true"></i>
-        <i id="theme-icon-dark" class="fas theme-icon fa-moon hidden" aria-hidden="true"></i>
-      </button>
-    </nav>
-  </header>
-
-  <main class="logs-page">
-    <div class="logs-header">
-      <h1>Logs</h1>
-      <div class="logs-actions">
-        <button id="refresh-logs">Refresh</button>
-        <button id="clear-logs">Clear</button>
-        <a class="btn" href="/stream/logs">View plain</a>
-      </div>
-    </div>
-
-    <div class="logs-content">
-      <pre id="container-logs" class="logs-pre">{{ logs }}</pre>
-    </div>
-  </main>
-
+  <pre id="logs">{{ logs }}</pre>
   <script src="/static/scripts/logs.js?v=0.2.0"></script>
 </body>
 

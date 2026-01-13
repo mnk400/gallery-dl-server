@@ -1,36 +1,25 @@
 /* Import base theme from manik.cc */
 @import url("https://manik.cc/style/export.css");
 
-/* Layout wrapper for index page */
-.wrapper {
-  max-width: 600px;
-  width: 100%;
-  margin: 0 auto;
-  padding: var(--spacing-2xl) var(--spacing-2xl);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+@font-face {
+  font-family: 'OvertheRainbow';
+  src: url('https://manik.cc/assets/data/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf') format('truetype');
+  font-display: swap;
 }
 
-@media (max-width: 600px) {
-  .wrapper {
-    padding: var(--spacing-xl) var(--spacing-xl);
-  }
+/* Layout wrapper - matches manik.cc */
+.wrapper {
+  max-width: 525px;
+  margin: auto;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
 }
 
 /* Header - shared between pages */
 header {
-  padding: var(--spacing-lg) var(--spacing-2xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-@media (max-width: 600px) {
-  header {
-    padding: var(--spacing-lg) var(--spacing-xl);
-  }
+  margin-bottom: var(--spacing-lg);
 }
 
 header a {
@@ -38,8 +27,8 @@ header a {
 }
 
 .logo {
-  font-size: 14pt;
-  font-weight: 600;
+  font-family: 'OvertheRainbow', cursive;
+  font-size: 16pt;
   color: var(--text-color);
 }
 
