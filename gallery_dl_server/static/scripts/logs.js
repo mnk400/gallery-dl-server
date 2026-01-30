@@ -5,6 +5,7 @@ function initTheme() {
 }
 initTheme();
 
+
 // Live log streaming
 const logs = document.getElementById("logs");
 const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";

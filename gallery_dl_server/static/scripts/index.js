@@ -1,36 +1,48 @@
 // ========== Theme Management ==========
 const themeToggle = document.getElementById("theme-toggle");
-const themeIconLight = document.getElementById("theme-icon-light");
-const themeIconDark = document.getElementById("theme-icon-dark");
+const themeIcon = document.getElementById("theme-icon");
 
-function setTheme(theme) {
+const themes = ["light", "dark", "blue", "red"];
+const themeIconMap = {
+  light: "ph-moon",
+  dark: "ph-drop",
+  blue: "ph-heart",
+  red: "ph-sun"
+};
+
+function setTheme(theme, skipTransition = false) {
+  if (!skipTransition) {
+    document.documentElement.classList.add("theme-transition");
+    document.body.classList.add("theme-transition");
+    setTimeout(() => {
+      document.documentElement.classList.remove("theme-transition");
+      document.body.classList.remove("theme-transition");
+    }, 500);
+  }
+
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem("theme", theme);
+  updateThemeIcon(theme);
+}
 
-  if (theme === "dark") {
-    themeIconLight.classList.add("hidden");
-    themeIconDark.classList.remove("hidden");
-  } else {
-    themeIconLight.classList.remove("hidden");
-    themeIconDark.classList.add("hidden");
-  }
+function updateThemeIcon(theme) {
+  // Remove all theme icon classes, keep ph-fill and theme-icon
+  Object.values(themeIconMap).forEach(cls => themeIcon.classList.remove(cls));
+  themeIcon.classList.add(themeIconMap[theme] || "ph-moon");
 }
 
 function initTheme() {
   const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    setTheme(savedTheme);
-  } else {
-    // Default to light theme
-    setTheme("light");
-  }
+  setTheme(savedTheme || "light", true);
 }
 
 initTheme();
 
 themeToggle.onclick = () => {
   const currentTheme = document.documentElement.getAttribute("data-theme");
-  setTheme(currentTheme === "dark" ? "light" : "dark");
+  const currentIndex = themes.indexOf(currentTheme);
+  const nextTheme = themes[(currentIndex + 1) % themes.length];
+  setTheme(nextTheme);
 };
 
 // ========== Select Element Persistence ==========

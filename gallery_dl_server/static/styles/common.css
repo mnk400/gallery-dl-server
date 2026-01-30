@@ -7,13 +7,6 @@
   font-display: swap;
 }
 
-/* Layout wrapper - matches manik.cc */
-.wrapper {
-  max-width: 525px;
-  margin: auto;
-  padding: var(--spacing-3xl) var(--spacing-2xl);
-}
-
 /* Header - shared between pages */
 header {
   display: flex;
@@ -65,10 +58,6 @@ header a {
 #theme-toggle:hover {
   color: var(--page-accent);
   background: transparent;
-}
-
-.hidden {
-  display: none !important;
 }
 
 #theme-toggle .theme-icon {
