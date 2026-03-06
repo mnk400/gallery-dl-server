@@ -50,6 +50,19 @@
   width: 140px;
 }
 
+.form-row-secondary {
+  margin-top: var(--spacing-sm);
+}
+
+.form-row-secondary input[type="text"] {
+  flex: 1;
+  opacity: 0.75;
+}
+
+.form-row-secondary input[type="text"]:focus {
+  opacity: 1;
+}
+
 @media (max-width: 600px) {
   .form-row {
     flex-direction: column;

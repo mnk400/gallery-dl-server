@@ -76,6 +76,19 @@ def config_update(request_options: dict[str, str]):
     entries_added: list[dict[str, Any] | None] = []
     entries_removed: list[Any] = []
 
+    custom_dir = request_options.get("custom-dir", "").strip()
+    if custom_dir:
+        # Override directory: keep {category} (platform name) but force custom subdirectory.
+        # This means e.g. "misc" → /gallery-dl/reddit/misc/ instead of /gallery-dl/reddit/some_user/
+        config.add({"extractor": {"directory": ["{category}", custom_dir]}})
+        entries_added.append({"extractor": {"directory": ["{category}", custom_dir]}})
+        # Clear any extractor-specific directory settings that would otherwise take precedence
+        # over the top-level extractor.directory we just set (gallery-dl's more specific keys win).
+        for val in config._config.get("extractor", {}).values():
+            if isinstance(val, dict) and "directory" in val:
+                removed = val.pop("directory")
+                entries_removed.append({"directory": removed})
+
     requested_format = request_options.get("video-options", "none-selected")
 
     if requested_format == "none-selected":

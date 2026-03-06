@@ -66,10 +66,10 @@ async def submit_form(request: Request):
     """Process form submission data and start download in the background or synchronously."""
     form_data = await request.form()
 
-    keys = ("url", "video-opts", "mode")
+    keys = ("url", "video-opts", "mode", "custom-dir")
     values = tuple(form_data.get(key) for key in keys)
 
-    url, video_opts, mode = (None if isinstance(value, UploadFile) else value for value in values)
+    url, video_opts, mode, custom_dir = (None if isinstance(value, UploadFile) else value for value in values)
 
     if not url:
         log.error("No URL provided.")
@@ -89,6 +89,9 @@ async def submit_form(request: Request):
         mode = request.query_params.get("mode", "async")
 
     request_options = {"video-options": video_opts}
+
+    if custom_dir and custom_dir.strip():
+        request_options["custom-dir"] = custom_dir.strip()
 
     if mode == "sync":
         return await sync_download(url.strip(), request_options)
