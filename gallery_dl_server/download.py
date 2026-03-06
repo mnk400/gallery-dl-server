@@ -76,6 +76,30 @@ def config_update(request_options: dict[str, str]):
     entries_added: list[dict[str, Any] | None] = []
     entries_removed: list[Any] = []
 
+    custom_dir = request_options.get("custom-dir", "").strip()
+    if custom_dir:
+        # Set top-level fallback for extractors without a specific directory config.
+        config.add({"extractor": {"directory": ["{category}", custom_dir]}})
+        entries_added.append({"extractor": {"directory": ["{category}", custom_dir]}})
+        # Rewrite extractor-specific directory configs to preserve their category format
+        # (e.g. {category!c} for Twitter) while replacing the subdirectory with custom_dir.
+        for val in config._config.get("extractor", {}).values():
+            if isinstance(val, dict) and "directory" in val:
+                existing = val["directory"]
+                if isinstance(existing, dict):
+                    # Conditional directory config — preserve first element of each condition
+                    new_dir = {}
+                    for condition, path in existing.items():
+                        first = path[0] if isinstance(path, list) and path else "{category}"
+                        new_dir[condition] = [first, custom_dir]
+                    entries_removed.append({"directory": existing})
+                    val["directory"] = new_dir
+                    entries_added.append({"directory": new_dir})
+                elif isinstance(existing, list) and existing:
+                    entries_removed.append({"directory": existing})
+                    val["directory"] = [existing[0], custom_dir]
+                    entries_added.append({"directory": val["directory"]})
+
     requested_format = request_options.get("video-options", "none-selected")
 
     if requested_format == "none-selected":
