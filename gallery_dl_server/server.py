@@ -431,7 +431,7 @@ csp_policy = (
     "form-action 'self'; "
     "manifest-src 'self'; "
     "img-src 'self' data:; "
-    "script-src 'self' https://cdn.jsdelivr.net; "
+    "script-src 'self' https://cdn.jsdelivr.net https://manik.cc; "
     "style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://manik.cc https://rsms.me https://unpkg.com; "
     "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://rsms.me https://manik.cc https://unpkg.com;"
 )

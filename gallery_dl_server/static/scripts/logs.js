@@ -1,10 +1,4 @@
-// Theme
-function initTheme() {
-  const savedTheme = localStorage.getItem("theme");
-  document.documentElement.setAttribute("data-theme", savedTheme || "light");
-}
-initTheme();
-
+// Theme managed by manik.cc theme-config + theme-manager (loaded in <head>)
 
 // Live log streaming
 const logs = document.getElementById("logs");

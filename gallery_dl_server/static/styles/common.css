@@ -26,7 +26,7 @@ header a {
 }
 
 .logo:hover {
-  color: var(--page-accent);
+  color: var(--contrast-overlay-hover);
 }
 
 .nav-links {
@@ -43,7 +43,7 @@ header a {
 }
 
 .nav-links a:hover {
-  color: var(--page-accent);
+  color: var(--contrast-overlay-hover);
 }
 
 /* Theme toggle button */
@@ -56,7 +56,7 @@ header a {
 }
 
 #theme-toggle:hover {
-  color: var(--page-accent);
+  color: var(--contrast-overlay-hover);
   background: transparent;
 }
 

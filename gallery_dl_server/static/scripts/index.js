@@ -1,48 +1,31 @@
-// ========== Theme Management ==========
+// ========== Theme Toggle  ==========
 const themeToggle = document.getElementById("theme-toggle");
 const themeIcon = document.getElementById("theme-icon");
+const tc = window.__themeConfig;
 
-const themes = ["light", "dark", "blue", "red"];
 const themeIconMap = {
-  light: "ph-moon",
-  dark: "ph-drop",
-  blue: "ph-heart",
-  red: "ph-sun"
+  linen: "ph-moon",
+  charcoal: "ph-drop",
+  denim: "ph-heart",
+  ruby: "ph-leaf",
+  matcha: "ph-sun",
+  butter: "ph-star"
 };
 
-function setTheme(theme, skipTransition = false) {
-  if (!skipTransition) {
-    document.documentElement.classList.add("theme-transition");
-    document.body.classList.add("theme-transition");
-    setTimeout(() => {
-      document.documentElement.classList.remove("theme-transition");
-      document.body.classList.remove("theme-transition");
-    }, 500);
-  }
-
-  document.documentElement.setAttribute("data-theme", theme);
-  localStorage.setItem("theme", theme);
-  updateThemeIcon(theme);
-}
-
 function updateThemeIcon(theme) {
-  // Remove all theme icon classes, keep ph-fill and theme-icon
   Object.values(themeIconMap).forEach(cls => themeIcon.classList.remove(cls));
   themeIcon.classList.add(themeIconMap[theme] || "ph-moon");
 }
 
-function initTheme() {
-  const savedTheme = localStorage.getItem("theme");
-  setTheme(savedTheme || "light", true);
-}
-
-initTheme();
+// Sync icon with the current theme
+updateThemeIcon(document.documentElement.getAttribute("data-theme") || tc.default);
 
 themeToggle.onclick = () => {
-  const currentTheme = document.documentElement.getAttribute("data-theme");
-  const currentIndex = themes.indexOf(currentTheme);
-  const nextTheme = themes[(currentIndex + 1) % themes.length];
-  setTheme(nextTheme);
+  const current = document.documentElement.getAttribute("data-theme");
+  const names = tc.names;
+  const next = names[(names.indexOf(current) + 1) % names.length];
+  setTheme(next);
+  updateThemeIcon(next);
 };
 
 // ========== Select Element Persistence ==========
@@ -113,7 +96,7 @@ document.body.classList.add("loaded");
 const form = document.getElementById("form");
 
 // Get the accent color from CSS variables for SweetAlert
-const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--page-accent').trim() || '#c6866d';
+const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--contrast-overlay-hover').trim() || '#c6866d';
 
 const successAlert = Swal.mixin({
   animation: true,

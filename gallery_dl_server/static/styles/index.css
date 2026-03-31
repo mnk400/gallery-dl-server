@@ -29,7 +29,7 @@
 }
 
 .hero p a:hover {
-  color: var(--page-accent);
+  color: var(--contrast-overlay-hover);
 }
 
 /* Download Form */
@@ -128,7 +128,7 @@
 }
 
 .swal2-html-container a {
-  color: var(--page-accent) !important;
+  color: var(--contrast-overlay-hover) !important;
 }
 
 .swal2-close {
@@ -136,15 +136,15 @@
 }
 
 .swal2-close:hover {
-  color: var(--page-accent) !important;
+  color: var(--contrast-overlay-hover) !important;
 }
 
 .swal2-timer-progress-bar {
-  background: var(--page-accent) !important;
+  background: var(--contrast-overlay-hover) !important;
 }
 
 .swal2-success-ring {
-  border-color: var(--page-accent) !important;
+  border-color: var(--contrast-overlay-hover) !important;
 }
 
 /* Body visibility during load */
